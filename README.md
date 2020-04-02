@@ -4,7 +4,11 @@
 N.B: l'image jenkins qu'il faut utilisé dois contenir docker_binary
 
 ![shema pipeline ci/cd avec jenkins et kubernetes](ci_cd_jenkins.png)
-
+## installation jenkins avec helm
+```
+helm inspect values stable/jenkins > /tmp/jenkins.values
+```
+### changé manuellement la config sur le fichier jenkins.values
 ==> configure pass
 ```
   adminPassword: "rootroot"
@@ -52,3 +56,13 @@ agent:
       hostPath: /var/run/docker.sock
       mountPath: /var/run/docker.sock
       ```
+### changé les droits docker.sock sur les workers nodes 
+```
+chmod 666 /var/run/docker.sock
+```
+## installation simple via un fichier de values déja parammetré (enregistrer sur ce repo)
+```
+git clone https://github.com/soufianem370/playjenkins.git
+cd playjenkins
+helm install jenkins stable/jenkins --values jenkins.values --namespace jenkins
+```
