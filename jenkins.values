@@ -154,7 +154,7 @@ master:
   nodePort: 32323
   # Enable Kubernetes Liveness and Readiness Probes
   # ~ 2 minutes to allow Jenkins to restart when upgrading plugins. Set ReadinessTimeout to be shorter than LivenessTimeout.
-  healthProbes: true
+  healthProbes: false
   healthProbesLivenessTimeout: 5
   healthProbesReadinessTimeout: 5
   healthProbeLivenessPeriodSeconds: 10
