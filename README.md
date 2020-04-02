@@ -5,4 +5,50 @@ N.B: l'image jenkins qu'il faut utilisé dois contenir docker_binary
 
 ![shema pipeline ci/cd avec jenkins et kubernetes](ci_cd_jenkins.png)
 
+==> configure pass
+```
+  adminPassword: "rootroot"
+  ```
+==> configure memory/cpu selon la performence du cluster
 
+```
+    limits:
+      cpu: "1000m"
+      memory: "2096Mi"
+```
+==> configure service NodePort
+```
+  serviceType: NodePort
+  nodePort: 32323
+```
+==> add plugins blueocean:1.18.1 (pipeline en mode graphique) et kubernetes-cd:2.0.0 (pour le deploy sur k8S)
+```
+  installPlugins:
+    - kubernetes:1.24.1
+    - workflow-job:2.36
+    - workflow-aggregator:2.6
+    - credentials-binding:1.21
+    - git:4.2.0
+    - blueocean:1.18.1
+    - kubernetes-cd:2.0.0
+ ```
+==> configure image pour l'agent jenkins
+```
+agent:
+  enabled: true
+  image: "joao29a/jnlp-slave-alpine-docker"
+  tag: "latest"
+```
+==> configure volume HostPath
+```
+  volumes:
+  # - type: Secret
+  #   secretName: mysecret
+  #   mountPath: /var/myapp/mysecret
+  # - type: EmptyDir
+  #   mountPath: "/var/lib/containers"
+  #   memory: false
+    - type: HostPath
+      hostPath: /var/run/docker.sock
+      mountPath: /var/run/docker.sock
+      ```
