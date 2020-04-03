@@ -55,13 +55,14 @@ agent:
     - type: HostPath
       hostPath: /var/run/docker.sock
       mountPath: /var/run/docker.sock
-      ```
+```
 ### changé les droits docker.sock sur les workers nodes 
 ```
 chmod 666 /var/run/docker.sock
 systemctl reload docker
 ```
 ## installation simple via un fichier de values déja parammetré (enregistrer sur ce repo)
+
 ```
 git clone https://github.com/soufianem370/playjenkins.git
 cd playjenkins
