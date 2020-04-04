@@ -10,7 +10,7 @@ pipeline {
     stage('Build image') {
       steps {
         script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+          dockerImage = docker.build registry + ":${BUILD_NUMBER}"
           dockerImage = docker.build registry + ":latest"
         }
 
@@ -30,7 +30,7 @@ pipeline {
     stage('change tag') {
       steps {
           sh "chmod +x changeTag.sh"
-          sh "./changeTag.sh ":$BUILD_NUMBER"
+          sh "./changeTag.sh ${BUILD_NUMBER}"
           }
         }
     stage('Deploy App') {
