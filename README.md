@@ -85,3 +85,63 @@ inserer ce code
 }
 ```
 nb: @ip et le port de votre serveur image registry
+
+==> jenkinsfile
+```
+pipeline {
+  agent any
+  // recuperer le code source changé ici le repo git
+  stages {
+    stage('Checkout Source') {
+      steps {
+        git 'https://github.com/soufianem370/playjenkins.git'
+      }
+    }
+    
+  // pour build image tagué avec le numero de build variable ${BUILD_NUMBER}
+    stage('Build image') {
+      steps {
+        script {
+          dockerImage = docker.build registry + ":${BUILD_NUMBER}"
+        }
+
+      }
+    }
+  // pour push image vers docker registry avec le numero de build comme tag ${BUILD_NUMBER}
+    stage('Push Image') {
+      steps {
+        script {
+          docker.withRegistry( "" ) {
+            dockerImage.push()
+            sh "docker push 172.17.0.1:5000/justme/myweb:${BUILD_NUMBER}"
+          }
+        }
+
+      }
+    }
+  // utilisé le scripte changeTag.sh qui va modifier l'image utilisé sur le fichier manifeste myweb.yaml de deploy k8S
+  // le scripte va rechercher le mot tagVersion et il va le remplacé par le numero de build ${BUILD_NUMBER}
+    stage('change tag') {
+      steps {
+          sh "chmod +x changeTag.sh"
+          sh "./changeTag.sh ${BUILD_NUMBER}"
+          }
+        }
+ //deploy vers k8S:le parammetre kubeconfigId doit etre le même que vous avez utilisé pour ajouter kubeadmin sur jenkins
+ // myweb.yaml: le fichier yaml de deploy sur k8S il contien aussi le service
+    stage('Deploy App') {
+      steps {
+        script {
+          kubernetesDeploy(configs: "myweb.yaml", kubeconfigId: "mykubeconfig")
+        }
+
+      }
+    }
+
+  }
+  environment {
+    registry = '172.17.0.1:5000/justme/myweb'
+    dockerImage = ''
+  }
+}
+```
