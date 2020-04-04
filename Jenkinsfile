@@ -27,7 +27,12 @@ pipeline {
 
       }
     }
-
+    stage('change tag') {
+      steps {
+          sh "chmod +x changeTag.sh"
+          sh "./changeTag.sh ":$BUILD_NUMBER"
+          }
+        }
     stage('Deploy App') {
       steps {
         script {
