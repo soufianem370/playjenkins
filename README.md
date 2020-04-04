@@ -68,4 +68,20 @@ git clone https://github.com/soufianem370/playjenkins.git
 cd playjenkins
 helm install jenkins stable/jenkins --values jenkins.values --namespace jenkins
 ```
+## installer un local image registry docker
 
+```
+docker run -d -p 5000:5000 --restart=always --name registry -v docker:/var/lib/registry registry:2
+```
+sur chaque worker il faut ajouter une configuration pour ignorer les erreurs SSL
+```
+vi /etc/docker/daemon.json
+```
+inserer ce code
+
+```
+{
+ "insecure-registries": ["172.17.0.1:5000"]
+}
+```
+nb: @ip et le port de votre serveur image registry
