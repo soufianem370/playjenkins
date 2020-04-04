@@ -22,6 +22,7 @@ pipeline {
         script {
           docker.withRegistry( "" ) {
             dockerImage.push()
+            sh "docker push justme/myweb:${BUILD_NUMBER}"
           }
         }
 
