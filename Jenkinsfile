@@ -22,7 +22,7 @@ pipeline {
         script {
           docker.withRegistry( "" ) {
             dockerImage.push()
-            sh "docker push justme/myweb:${BUILD_NUMBER}"
+            sh "docker push 172.17.0.1:5000/justme/myweb:${BUILD_NUMBER}"
           }
         }
 
