@@ -15,6 +15,7 @@ spec:
     metadata:
       labels:
         app: myweb
+        namespace: dev
     spec:
       containers:
       - image: 172.17.0.1:5000/justme/myweb:tagVersion
