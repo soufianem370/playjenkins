@@ -5,6 +5,7 @@ metadata:
   labels:
     app: myweb
   name: myweb
+  namespace: qa
 spec:
   replicas: 1
   selector:
@@ -27,9 +28,10 @@ metadata:
   labels:
     app: myweb
   name: myweb
+  namespace: qa
 spec:
   ports:
-  - nodePort: 32223
+  - nodePort: 32226
     port: 80
     protocol: TCP
     targetPort: 80
