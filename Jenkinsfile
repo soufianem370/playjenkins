@@ -27,12 +27,14 @@ pipeline {
 
       }
     }
+
     stage('change tag') {
       steps {
-          sh "chmod +x changeTag.sh"
-          sh "./changeTag.sh ${BUILD_NUMBER}"
-          }
-        }
+        sh 'chmod +x changeTag.sh'
+        sh "./changeTag.sh ${BUILD_NUMBER}"
+      }
+    }
+
     stage('Deploy App') {
       steps {
         script {
@@ -46,5 +48,6 @@ pipeline {
   environment {
     registry = '172.42.42.1:5000/justme/myweb'
     dockerImage = ''
+    namespace = 'dev'
   }
 }
