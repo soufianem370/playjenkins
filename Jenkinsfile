@@ -22,7 +22,7 @@ pipeline {
         script {
           docker.withRegistry( "" ) {
             dockerImage.push()
-            sh "docker push 172.17.0.1:5000/justme/myweb:${BUILD_NUMBER}"
+            sh "docker push 172.42.42.1:5000/justme/myweb:${BUILD_NUMBER}"
           }
         }
 
@@ -45,7 +45,7 @@ pipeline {
 
   }
   environment {
-    registry = '172.17.0.1:5000/justme/myweb'
+    registry = '172.42.42.1:5000/justme/myweb'
     dockerImage = ''
   }
 }
