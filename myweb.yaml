@@ -16,7 +16,7 @@ spec:
         app: myweb
     spec:
       containers:
-      - image: 172.17.0.1:5000/justme/myweb:tagVersion
+      - image: 172.42.42.1:5000/justme/myweb:tagVersion
         imagePullPolicy: Always
         name: myweb
 
