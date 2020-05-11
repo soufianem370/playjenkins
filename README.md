@@ -66,7 +66,7 @@ systemctl reload docker
 ```
 git clone https://github.com/soufianem370/playjenkins.git
 cd playjenkins
-helm install jenkins stable/jenkins --values jenkins.values --namespace jenkins
+helm install jenkins --values jenkins.values --namespace jenkins .
 ```
 ## installer un local image registry docker
 
