@@ -1,0 +1,152 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "7"
+  creationTimestamp: "2018-08-23T09:16:21Z"
+  generation: 7
+  labels:
+    app: sonarqube
+    chart: sonarqube-0.9.0
+    heritage: Tiller
+    release: digimind-sonarqube
+  name: digimind-sonarqube-sonarqube
+  namespace: devops
+  resourceVersion: "225528997"
+  selfLink: /apis/extensions/v1beta1/namespaces/devops/deployments/digimind-sonarqube-sonarqube
+  uid: 33877df6-a6b5-11e8-8e3b-fa163eb1a314
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: sonarqube
+      release: digimind-sonarqube
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: sonarqube
+        release: digimind-sonarqube
+    spec:
+      containers:
+      - command:
+        - sh
+        - -ce
+        - 'mkdir /scripts && cp /tmp-script/startup.sh /scripts/startup.sh && chmod
+          0755 /scripts/startup.sh && /scripts/startup.sh '
+        env:
+        - name: SONARQUBE_JDBC_USERNAME
+          value: sonarUser
+        - name: SONARQUBE_JDBC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: postgres-password
+              name: digimind-sonarqube-postgresql
+        - name: SONARQUBE_JDBC_URL
+          value: jdbc:postgresql://digimind-sonarqube-postgresql:5432/sonarDB
+        image: sonarqube:6.7
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /sessions/new
+            port: 9000
+            scheme: HTTP
+          initialDelaySeconds: 600
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: sonarqube
+        ports:
+        - containerPort: 9000
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 10
+          httpGet:
+            path: /sessions/new
+            port: 9000
+            scheme: HTTP
+          initialDelaySeconds: 300
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 10
+        resources:
+          limits:
+            cpu: 200m
+            memory: 8Gi
+          requests:
+            cpu: 50m
+            memory: 2Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /opt/sonarqube/conf
+          name: sonarqube
+          subPath: conf
+        - mountPath: /tmp-script/
+          name: startup
+        - mountPath: /tmp/conf/
+          name: config
+        - mountPath: /opt/sonarqube/data
+          name: sonarqube
+          subPath: data
+        - mountPath: /opt/sonarqube/extensions
+          name: sonarqube
+          subPath: extensions
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: sonar.properties
+            path: sonar.properties
+          name: digimind-sonarqube-sonarqube-config
+        name: config
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: install_plugins.sh
+            path: install_plugins.sh
+          name: digimind-sonarqube-sonarqube-install-plugins
+        name: install-plugins
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: startup.sh
+            path: startup.sh
+          name: digimind-sonarqube-sonarqube-startup
+        name: startup
+      - name: sonarqube
+        persistentVolumeClaim:
+          claimName: digimind-sonarqube-sonarqube
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2018-08-23T09:16:21Z"
+    lastUpdateTime: "2018-08-23T09:16:21Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2020-02-04T14:14:09Z"
+    lastUpdateTime: "2020-02-04T14:36:55Z"
+    message: ReplicaSet "digimind-sonarqube-sonarqube-5cb6948ff9" has successfully
+      progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 7
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1
