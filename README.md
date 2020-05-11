@@ -56,11 +56,7 @@ agent:
       hostPath: /var/run/docker.sock
       mountPath: /var/run/docker.sock
 ```
-### changé les droits docker.sock sur les workers nodes 
-```
-chmod 666 /var/run/docker.sock
-systemctl reload docker
-```
+
 ## installation simple via un fichier de values déja parammetré (enregistrer sur ce repo)
 
 ```
@@ -72,6 +68,12 @@ helm install jenkins --values jenkins.values --namespace jenkins .
 
 ```
 docker run -d -p 5000:5000 --restart=always --name registry -v docker:/var/lib/registry registry:2
+```
+
+### changé les droits docker.sock sur les workers nodes 
+```
+chmod 666 /var/run/docker.sock
+systemctl reload docker
 ```
 sur chaque worker il faut ajouter une configuration pour ignorer les erreurs SSL
 ```
