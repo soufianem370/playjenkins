@@ -86,6 +86,12 @@ inserer ce code
 ```
 nb: @ip et le port de votre serveur image registry
 
+reload la config de docker docker
+
+```
+systemctl reload docker
+```
+
 ==> jenkinsfile
 ```
 pipeline {
