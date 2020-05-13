@@ -56,6 +56,8 @@ agent:
       hostPath: /var/run/docker.sock
       mountPath: /var/run/docker.sock
 ```
+==> pour définir le namespace du slave 
+slaveKubernetesNamespace:prod
 
 ## installation simple via un fichier de values déja parammetré (enregistrer sur ce repo)
 
